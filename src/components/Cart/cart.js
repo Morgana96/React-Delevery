@@ -7,14 +7,19 @@ import CartItem from './cartItem'
 const Cart = props =>{
 
     const cartCtx = useContext(CartContext)
+
     const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`
+    console.log(totalAmount);
 
-    const onAddHandler = (item) =>{
-
+    const hasItem = cartCtx.item.length >0
+    
+    const onRemoveHandler = (id) =>{
+        cartCtx.removeItem(id)
     }
 
-    const onRemoveHandler = (id) =>{
-
+    const onAddHandler = (item) =>{
+        cartCtx.addItem({item, amount: 1})
+        console.log(item);
     }
 
     const cartItems = 
@@ -25,9 +30,8 @@ const Cart = props =>{
                 name = {item.name} 
                 amount = {item.amount} 
                 price = {item.price} 
-                onRemove = {onRemoveHandler} 
-                onAdd = {onAddHandler}>
-                
+                onRemove = {onRemoveHandler.bind(null, item.id)} 
+                onAdd = {onAddHandler.bind(null, item)}>     
             </CartItem>))}
     </ul>
 
@@ -38,10 +42,9 @@ const Cart = props =>{
             <span>Total Amount</span>
             <span>{totalAmount}</span>
         </div>
-
         <div className={classes.actions}>
             <button onClick={props.hideCart} className={classes['button--alt']}>Close</button>
-            {cartCtx.item.length>0 && <button className={classes.button}>Order</button>}
+            {hasItem && <button className={classes.button}>Order</button>}
         </div>
     </Modal>
     )

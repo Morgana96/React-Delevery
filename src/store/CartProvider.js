@@ -8,26 +8,65 @@ const defaultCartState = {
 }
 
 const cartReducer = (state, action) =>{
-    console.log(state);
+
     if(action.type === "ADD_CART"){
-        const uldateTotalAmount = state.totalAmount + action.item.price * action.item.amount
+        //先计算totalAmount 总是没有错的
+        const updateTotalAmount = state.totalAmount + action.item.price * action.item.amount
 
         const existingCartItemIndex = state.item.findIndex(
             (item) => item.id === action.item.id
-        )
-        console.log(existingCartItemIndex);
+        )//输出的的是符合条件对象的索引
+        const existingCartItem = state.item[existingCartItemIndex]
+        
+        let updatedCartItems
 
-        const updateItems = state.item.concat(action.item)
-        //concart will not update an array but a new array
+        if(existingCartItem){
+            let updatedCart
+            updatedCart = {
+                ...existingCartItem,
+                amount: existingCartItem.amount + action.item.amount
+            }
+            updatedCartItems = [...state.item]
+            updatedCartItems[existingCartItemIndex] = updatedCart
+            
+        }else{
+            updatedCartItems = state.item.concat(action.item)
+            console.log(updatedCartItems);
+            console.log(updateTotalAmount);
+            //合并数组 concart will not update an array but a new array
+        }
         
         return {
-            item: updateItems,
-            totalAmount: uldateTotalAmount
+            item: updatedCartItems,
+            totalAmount: updateTotalAmount
         }
     }
 
     if(action.type === "REMOVE_CART"){
+        console.log('111');
+        const existingCartItemIndex = state.item.findIndex(
+            (item) => item.id === action.id
+        )
+        const existingCartItem = state.item[existingCartItemIndex]
+        const updateTotalAmount = state.totalAmount - existingCartItem.price
+        console.log(updateTotalAmount);
+        
+        let updatedItems
+        console.log(updatedItems);
+        if(existingCartItem.amount === 1){
+            updatedItems = state.item.filter(item => item.id !==action.id)
+            console.log(updatedItems);
+        }else{
+            const updatedItem = {...existingCartItem, amount: existingCartItem.amount - 1}
+            updatedItems = [...state.item]
+            updatedItems[existingCartItemIndex] = updatedItem
+            console.log(updatedItems);
+        }
 
+        return{
+            item: updatedItems,
+            totalAmount: updateTotalAmount
+        }
     }
 
     return defaultCartState
@@ -43,7 +82,7 @@ const CartProvider = props =>{
     }
 
     const removeItemToCartHandler =(id) =>{
-        dispatchCartAction({typr:"REMOVE_CART", id:id})
+        dispatchCartAction({type:"REMOVE_CART", id:id})
     }
 
     const cartContext ={

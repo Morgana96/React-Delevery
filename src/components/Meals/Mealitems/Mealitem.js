@@ -6,7 +6,6 @@ import { useContext } from 'react'
 const Mealitem = props => {
 
     const cartCtx = useContext(CartContext)
-
     const price = `$${props.price.toFixed(2)}`
 
     const addToCartHandler = amount =>{
@@ -15,7 +14,6 @@ const Mealitem = props => {
             name: props.name,
             amount: amount,
             price: props.price
-
         })
     }
 
@@ -26,7 +24,7 @@ const Mealitem = props => {
             <div className={classes.price}>{price}</div>
         </div>
         <div>
-            <MealitemForm onAddToCart = {addToCartHandler}></MealitemForm>
+            <MealitemForm id = {props.id} onAddToCart = {addToCartHandler}></MealitemForm>
         </div>
     </li>
 }
