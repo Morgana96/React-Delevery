@@ -18,8 +18,7 @@ const Cart = props =>{
     }
 
     const onAddHandler = (item) =>{
-        cartCtx.addItem({item, amount: 1})
-        console.log(item);
+        cartCtx.addItem({...item, amount: 1})  //This...error has been found for a century /(ㄒoㄒ)/~~
     }
 
     const cartItems = 
